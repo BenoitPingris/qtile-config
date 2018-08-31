@@ -1,6 +1,0 @@
-from libqtile import widget
-
-class Volume(widget.Volume):
-    def _update_drawer(self):
-        self.text = '%s%%' % self.volume
-        
