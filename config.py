@@ -8,6 +8,8 @@ import subprocess
 from keys import keys
 from helper import MOD, DEFAULT_FONT
 from widget import Volume, Battery, Backlight
+from colors_schemes import Colors
+
 
 try:
     from typing import List  # noqa: F401
@@ -18,39 +20,9 @@ except ImportError:
 color_alert = '#ee9900'
 
 
-wps_logos = (
-     (
-         '',
-         {}
-     ),
-    (
-        '',
-        {}
-    ),
-    (
-        '',
-        {}
-    ),
-    (
-        '',
-        {}
-    ),
-    (
-        '',
-        {}
-    )
-)
-
-wps_shortcuts = (
-    'a',
-    'z',
-    'e',
-    'r',
-    't'
-)
-
+wps_logos = (('', {}),('', {}),('', {}),('', {}),('', {}))
+wps_shortcuts = ('a','z','e','r','t')
 groups = [Group(i, **kwargs) for i, kwargs in wps_logos]
-
 
 for a, i in enumerate(groups):
     keys.extend([
@@ -69,7 +41,7 @@ layouts = [
         border_focus_fixed='#00e8dc',
         border_width=2,
         border_width_single=1,
-        margin=15
+        margin=20
     )
 ]
 
@@ -116,30 +88,9 @@ focus_on_window_activation = "smart"
 
 wmname = "LG3D"
 
-# class Battery(widget.Battery):
-# 	def _get_text(self):
-# 		info = self._get_info()
-# 		if info is False:
-# 			return '---'
-# 		if info['full']:
-# 			no = math.floor(info['now'] / info['full'] * 100)
-# 		else:
-# 			no = 0
-# 		if info['stat'] == 'Discharging':
-# 			char = self.discharge_char
-# 			if no < 20:
-# 				self.layout.colour = self.low_foreground
-# 			else:
-# 				self.layout.colour = self.foreground
-# 		elif info['stat'] == 'Charging':
-# 			char = self.charge_char
-# 		#elif info['stat'] == 'Unknown':
-# 		else:
-# 			char = '■'
-# 		return '{} {}{}'.format(char, no, '%')#chr(0x1F506))
-
+bg_color = Colors()
 default_fonts = DEFAULT_FONT
-            
+
 screens = [
     Screen(
         top=bar.Bar(
@@ -164,27 +115,27 @@ screens = [
                 ),
                 widget.Spacer(length=15),
                 Volume(
-                    background="#6f70a9",
+                    background=bg_color.get_next_color(),
                     **default_fonts
                 ),
                 Backlight(brightness_file="/sys/class/backlight/intel_backlight/actual_brightness",
                     max_brightness_file="/sys/class/backlight/intel_backlight/max_brightness",
                     **default_fonts,
-                    background="#4e8daa"),
+                    background=bg_color.get_next_color()),
                 Battery(charge_char=u'', 
                 	discharge_char=u'', 
                 	low_foreground=color_alert,
                 	foreground="#ffffff",
-                        background="#6da0a9",
+                        background=bg_color.get_next_color(),
                         update_delay=2,
                         **default_fonts
                 ),
                 widget.Clock(
-                    background="#8daca6",
+                    background=bg_color.get_next_color(),
                     **default_fonts
                 ),
                 widget.ThermalSensor(
-                    background="#c5afa3",
+                    background=bg_color.get_next_color(),
                     **default_fonts
                 ),
                 widget.CheckUpdates(
@@ -197,7 +148,7 @@ screens = [
     ),
 ]
 
-@hook.subscribe.startup
+@hook.subscribe.startup_once
 def autostart():
     home = os.path.expanduser('~/.config/qtile/autostart.sh')
     subprocess.call([home])
