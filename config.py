@@ -1,4 +1,4 @@
-from libqtile.config import Key, Screen, Group, Drag, Click
+from libqtile.config import Key, Screen, Group, Drag, Click, Match
 from libqtile.command import lazy
 from libqtile import layout, bar, widget, hook
 from plasma import Plasma
@@ -9,7 +9,7 @@ from keys import keys
 from helper import MOD, DEFAULT_FONT
 from widget import Volume, Battery, Backlight
 from colors_schemes import Colors
-
+from screen import screen
 
 try:
     from typing import List  # noqa: F401
@@ -20,9 +20,22 @@ except ImportError:
 color_alert = '#ee9900'
 
 
-wps_logos = (('', {}),('', {}),('', {}),('', {}),('', {}))
+# wps_logos = (('', {}),
+#              ('', {}),
+#              ('', {}),
+#              ('', {}),
+#              ('', {}))
+
 wps_shortcuts = ('a','z','e','r','t')
-groups = [Group(i, **kwargs) for i, kwargs in wps_logos]
+#groups = [Group(i, **kwargs) for i, kwargs in wps_logos]
+
+groups = [
+    Group('', matches=[Match(wm_class=['google-chrome', 'Google-chrome'])]),
+    Group('', matches=[Match(wm_class=['code', 'Code'])]),
+    Group('', matches=[Match(wm_class=['spotify', 'Spotify'])]),
+    Group(''),
+    Group(''),
+]
 
 for a, i in enumerate(groups):
     keys.extend([
@@ -75,77 +88,30 @@ floating_layout = layout.Floating(float_rules=[
 	{'wmclass': 'file_progress'},     
 	{'wmclass': 'notification'},     
 	{'wmclass': 'splash'}, 
-	{'wmclass': 'toolbar'},     
+	{'wmclass': 'toolbar'},
+    	{'wmclass': 'popup'},
+    	{'wmclass': 'pop-up'},
+    	{'wmclass': 'floating'},     
 	{'wmclass': 'confirmreset'},  # gitk     
 	{'wmclass': 'makebranch'},  # gitk
 	{'wmclass': 'maketag'},  #gitk     
 	{'wname': 'branchdialog'},  # gitk     
 	{'wname': 'pinentry'},  # GPG key password entry     
-	{'wmclass': 'ssh-askpass'},  # ssh-askpass 
+	{'wmclass': 'ssh-askpass'},  # ssh-askpass
+    
 ])
 auto_fullscreen = True
 focus_on_window_activation = "smart"
+follow_mouse_focus = False
 
 wmname = "LG3D"
 
-bg_color = Colors()
 default_fonts = DEFAULT_FONT
 
+
+
 screens = [
-    Screen(
-        top=bar.Bar(
-            [
-                widget.GroupBox(
-                    center_aligned=True,
-                    padding=8,
-                    borderwidth=2,
-                    disable_drag=True,
-                    rounded=False,
-                    font="FontAwesome",
-                    fontsize=16
-                ),
-                widget.Prompt(),
-                widget.Spacer(length=15),
-                widget.WindowName(
-                    **default_fonts
-                ),
-#                widget.TextBox("default config", name="default"),
-                widget.Systray(
-                    icon_size=25
-                ),
-                widget.Spacer(length=15),
-                Volume(
-                    background=bg_color.get_next_color(),
-                    **default_fonts
-                ),
-                Backlight(brightness_file="/sys/class/backlight/intel_backlight/actual_brightness",
-                    max_brightness_file="/sys/class/backlight/intel_backlight/max_brightness",
-                    **default_fonts,
-                    background=bg_color.get_next_color()),
-                Battery(charge_char=u'', 
-                	discharge_char=u'', 
-                	low_foreground=color_alert,
-                	foreground="#ffffff",
-                        background=bg_color.get_next_color(),
-                        update_delay=2,
-                        **default_fonts
-                ),
-                widget.Clock(
-                    background=bg_color.get_next_color(),
-                    **default_fonts
-                ),
-                widget.ThermalSensor(
-                    background=bg_color.get_next_color(),
-                    **default_fonts
-                ),
-                widget.CheckUpdates(
-                    display_format='{updates}',
-                    **default_fonts
-                )
-            ],
-            35,
-        ),
-    ),
+    screen,
 ]
 
 @hook.subscribe.startup_once

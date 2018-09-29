@@ -34,4 +34,5 @@ keys = [
     Key([MOD, "control"], "Up", lazy.layout.move_up()),
     Key([MOD, "control"], "Down", lazy.layout.move_down()),
     Key([MOD, "shift"], "l", lazy.spawn('dm-tool lock')),
+    Key([MOD, "shift"], "k", lazy.spawn('/home/benoit/bin/lock_suspend'))
 ]
